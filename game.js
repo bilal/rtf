@@ -1,10 +1,34 @@
+
+//Screen Size variables
+var HORIZONTAL_SIZE = 400;
+var VERTICAL_SIZE = 320;
+
+var SPRITE_SIZE = 16;
+var X_BLOCKS = HORIZONTAL_SIZE/SPRITE_SIZE;
+var Y_BLOCKS = VERTICAL_SIZE/SPRITE_SIZE;
+
+//Goal related variables
+var GOAL_PATCH_SIZE = 10;
+var GOAL_SIZE = 60;
+var GOAL_EMPTY_SPACE = 10;
+var GOAL_NUM_PATCHES = (GOAL_SIZE - GOAL_EMPTY_SPACE)/GOAL_PATCH_SIZE;
+var GOAL_START = (VERTICAL_SIZE - GOAL_SIZE)/2;
+var GOAL_END = GOAL_START + GOAL_SIZE;
+
+//Play Area Variables
+var PLAY_AREAH_MIN = SPRITE_SIZE;
+var PLAY_AREA_H_MAX = HORIZONTAL_SIZE - SPRITE_SIZE;
+var PLAY_AREA_V_MIN = SPRITE_SIZE;
+var PLAY_AREA_V_MAX = VERTICAL_SIZE - SPRITE_SIZE;
+
+
 window.onload = function() {
 	//start crafty
-	Crafty.init(400, 320);
+	Crafty.init(HORIZONTAL_SIZE, VERTICAL_SIZE);
 	Crafty.canvas();
 	
 	//turn the sprite map into usable components
-	Crafty.sprite(16, "sprite2.png", {
+	Crafty.sprite(SPRITE_SIZE, "sprite2.png", {
 		grass1: [0,0],
 		grass2: [1,0],
 		grass3: [2,0],
@@ -20,46 +44,46 @@ window.onload = function() {
 	//method to randomy generate the map
 	function generateWorld() {
 		//generate the grass along the x-axis
-		for(var i = 0; i < 25; i++) {
+		for(var i = 0; i < X_BLOCKS; i++) {
 			//generate the grass along the y-axis
-			for(var j = 0; j < 20; j++) {
+			for(var j = 0; j < Y_BLOCKS; j++) {
 				grassType = Crafty.randRange(1, 4);
 				Crafty.e("2D, Canvas, grass"+grassType)
-					.attr({x: i * 16, y: j * 16});
+					.attr({x: i * SPRITE_SIZE, y: j * SPRITE_SIZE});
 				
 			}
 		}
 		
 		//create the bushes along the x-axis which will form the boundaries
-		for(var i = 0; i < 25; i++) {
+		for(var i = 0; i < X_BLOCKS; i++) {
 			Crafty.e("2D, Canvas, wall_top, bush"+Crafty.randRange(1,2))
-				.attr({x: i * 16, y: 0, z: 2});
+				.attr({x: i * SPRITE_SIZE, y: 0, z: 2});
 			Crafty.e("2D, DOM, wall_bottom, bush"+Crafty.randRange(1,2))
-				.attr({x: i * 16, y: 304, z: 2});
+				.attr({x: i * SPRITE_SIZE, y: PLAY_AREA_V_MAX, z: 2});
 		}
 		
 
 		//create the bushes along the y-axis
 		//we need to start one more and one less to not overlap the previous bushes
-		for(var i = 1; i < 19; i++) {
+		for(var i = 1; i < Y_BLOCKS - 1; i++) {
 		
 			//skip goals
-			if((i*16) >= 140 && (i*16) <= 200) continue;
+			if((i*SPRITE_SIZE) >= GOAL_START && (i*SPRITE_SIZE) <= GOAL_END) continue;
 			
 			Crafty.e("2D, DOM, wall_left, bush"+Crafty.randRange(1,2))
-				.attr({x: 0, y: i * 16, z: 2});
+				.attr({x: 0, y: i * SPRITE_SIZE, z: 2});
 			Crafty.e("2D, Canvas, wall_right, bush"+Crafty.randRange(1,2))
-				.attr({x: 384, y: i * 16, z: 2});
+				.attr({x: PLAY_AREA_H_MAX, y: i * SPRITE_SIZE, z: 2});
 		}
 		
 		//create the goals
-		for(var i = 0; i<5; i++) {
+		for(var i = 0; i<GOAL_NUM_PATCHES; i++) {
 		
 		Crafty.e("2D, Canvas, goal_left, goal")
-			.attr({x: 0, y: (145 + (i*10)), z: 2});
+			.attr({x: 0, y: (GOAL_START + (GOAL_EMPTY_SPACE/2) + (i*GOAL_PATCH_SIZE)), z: 2});
 		
 		Crafty.e("2D, Canvas, goal_right, goal")
-			.attr({x: 384, y: (145 + (i*10)), z: 2});	
+			.attr({x: PLAY_AREA_H_MAX, y: (GOAL_START + (GOAL_EMPTY_SPACE/2) + (i*GOAL_PATCH_SIZE)), z: 2});	
 		}
 		
 
