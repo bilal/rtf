@@ -32,6 +32,7 @@ var INIT_P1_POS_Y = INIT_P2_POS_Y = INIT_BALL_POS_Y;
 var INIT_P1_POS_X = INIT_BALL_POS_X - 2*SPRITE_SIZE;
 var INIT_P2_POS_X = INIT_BALL_POS_X + 2*SPRITE_SIZE;
 
+
 window.onload = function() {
 	//start crafty
 	Crafty.init(X_SIZE, Y_SIZE);
@@ -119,6 +120,7 @@ window.onload = function() {
 	
 	Crafty.scene("main", function() {
 		generateWorld();
+		logger("Game Initialization Complete");
 		
 		Crafty.c('CustomControls1', {
 			__move: {left: false, right: false, up: false, down: false},	
@@ -335,4 +337,13 @@ window.onload = function() {
 			
 			
 	});
+
 };
+
+
+
+//helper functions
+function logger(msg){
+	$("#body").append(msg);
+	$("#body").append("<br>")
+}
