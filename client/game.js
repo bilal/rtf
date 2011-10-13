@@ -21,7 +21,6 @@ var PLAY_AREA_X_MAX = X_SIZE - SPRITE_SIZE;
 var PLAY_AREA_Y_MIN = SPRITE_SIZE;
 var PLAY_AREA_Y_MAX = Y_SIZE - SPRITE_SIZE;
 
-
 //Initial Positions
 var INIT_BALL_POS_X = PLAY_AREA_X_MAX/2;
 var INIT_BALL_POS_Y = PLAY_AREA_Y_MAX/2;
@@ -32,6 +31,8 @@ var INIT_P1_POS_Y = INIT_P2_POS_Y = INIT_BALL_POS_Y;
 var INIT_P1_POS_X = INIT_BALL_POS_X - 2*SPRITE_SIZE;
 var INIT_P2_POS_X = INIT_BALL_POS_X + 2*SPRITE_SIZE;
 
+var WALKSPEED = 2;
+var RUNSPEED = 3;
 
 window.onload = function() {
 	//start crafty
@@ -134,17 +135,21 @@ window.onload = function() {
 					//move the player in a direction depending on the booleans
 					//only move the player in one direction at a time (up/down/left/right)
 					if(this.isDown("RIGHT_ARROW")){
-						if(this.isDown("SHIFT")) this.x += this._speed*2;
-						else this.x += this._speed;} 
+						if(this.isDown("SHIFT"))this._speed = RUNSPEED;
+						else this._speed = WALKSPEED;
+						this.x += this._speed;}						
 					else if(this.isDown("LEFT_ARROW")){ 
-						if(this.isDown("SHIFT")) this.x -= this._speed*2;
-						else this.x -= this._speed; }
+						if(this.isDown("SHIFT")) this._speed = RUNSPEED;
+						else this._speed = WALKSPEED;
+						this.x -= this._speed; }
 					else if(this.isDown("UP_ARROW")){
-						if(this.isDown("SHIFT")) this.y -= this._speed*2;
-						else this.y -= this._speed; }	
+						if(this.isDown("SHIFT"))this._speed = RUNSPEED;
+						else this._speed = WALKSPEED;
+						this.y -= this._speed;}	
 					else if(this.isDown("DOWN_ARROW")){
-						if(this.isDown("SHIFT")) this.y += this._speed*2;
-						else this.y += this._speed; }
+						if(this.isDown("SHIFT"))this._speed = RUNSPEED;
+						else this._speed = WALKSPEED;
+						this.y += this._speed; }
 					
 				});
 				
