@@ -31,24 +31,15 @@
                 var webSocket = new io.connect('http://localhost', { port: 2000 });
 
                 webSocket.on('connect', function() {
-                   logger("Connected to the server");
+                    $('#messages').append('<li>Connected to the server.</li>');
                 });
 
-		webSocket.on('game_name', function(message) {
-			var name=prompt("Please enter your name","");
-			while(name == null || name==""){
-				name=prompt("Please enter your name","");
-			}
-			webSocket.emit('game_name', name);
-			logger("Your name is " + name);
-		});
-
                 webSocket.on('message', function(message) {
-                    logger(message);
+                    $('#messages').append('<li>' + message + '</li>');
                 });
 
                 webSocket.on('disconnect', function() {
-                    logger('Disconnected from the server');
+                    $('#messages').append('<li>Disconnected from the server.</li>');
                 });
 
                 $('#sendButton').bind('click', function() {

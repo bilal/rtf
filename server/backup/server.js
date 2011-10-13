@@ -17,22 +17,19 @@ var io = socketIO.listen(httpServer);
 io.sockets.on('connection', function(socket) {
 
     console.log('new connection from client');
-    socket.emit('game_name','Please enter a user name ...');
+    socket.send('Please enter a user name ...');
     socket.broadcast.emit('message','a new user connected');
 
 
     var userName;
-
-
-    socket.on('game_name', function(message) {
-	console.log("message: " + message);
-	userName = message;
-	socket.broadcast.emit('message', message + ' has joined the game.');
-
-    });
-
     socket.on('message', function(message) {
 	console.log("message: " + message);
+        if(!userName) {
+            userName = message;
+            socket.broadcast.emit('message',message + ' has entered the zone.');
+            return;
+        }
+
         var broadcastMessage = userName + ': ' + message;
         socket.broadcast.emit('message',broadcastMessage);
     });
