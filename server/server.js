@@ -31,6 +31,13 @@ io.sockets.on('connection', function(socket) {
 
     });
 
+	
+    socket.on('game_move', function(message) {
+	console.log("message: " + JSON.stringify(message));
+
+
+   });
+
     socket.on('message', function(message) {
 	console.log("message: " + message);
         var broadcastMessage = userName + ': ' + message;
@@ -42,3 +49,4 @@ io.sockets.on('connection', function(socket) {
         socket.broadcast.emit('message',broadcastMessage);
     });
 });
+

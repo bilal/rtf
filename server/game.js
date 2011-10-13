@@ -140,25 +140,25 @@ window.onload = function() {
 					//move the player in a direction depending on the booleans
 					//only move the player in one direction at a time (up/down/left/right)
 					if(this.isDown("RIGHT_ARROW")){
-						if (this.isDown("SPACE") && player1.hit("ball")) shootball("RIGHT");
-						if(this.isDown("SHIFT"))this._speed = RUNSPEED;
-						else this._speed = WALKSPEED;
-						this.x += this._speed;}						
+
+						webSocket.emit('game_move',{player:"1", move:"RIGHT_ARROW"});
+						right_logic(this);
+					}						
 					else if(this.isDown("LEFT_ARROW")){ 
-						if (this.isDown("SPACE") && player1.hit("ball")) shootball("LEFT");
-						if(this.isDown("SHIFT")) this._speed = RUNSPEED;
-						else this._speed = WALKSPEED;
-						this.x -= this._speed; }
+
+						webSocket.emit('game_move',{player:"1", move:"LEFT_ARROW"});
+						left_logic(this);
+					}
 					else if(this.isDown("UP_ARROW")){
-						if (this.isDown("SPACE") && player1.hit("ball")) shootball("UP");
-						if(this.isDown("SHIFT"))this._speed = RUNSPEED;
-						else this._speed = WALKSPEED;
-						this.y -= this._speed;}	
+			
+						webSocket.emit('game_move',{player:"1", move:"UP_ARROW"});
+						up_logic(this);
+					}	
 					else if(this.isDown("DOWN_ARROW")){
-						if (this.isDown("SPACE") && player1.hit("ball")) shootball("DOWN");
-						if(this.isDown("SHIFT"))this._speed = RUNSPEED;
-						else this._speed = WALKSPEED;
-						this.y += this._speed; }
+
+						webSocket.emit('game_move',{player:"1", move:"DOWN_ARROW"});
+						down_logic(this);
+					 }
 					
 				});
 				
@@ -357,6 +357,45 @@ window.onload = function() {
 	});
 
 };
+
+
+
+function right_logic(crafty_obj){
+	if (crafty_obj.isDown("SPACE") && player1.hit("ball")) shootball("RIGHT");
+	if(crafty_obj.isDown("SHIFT")) crafty_obj._speed = RUNSPEED;
+	else crafty_obj._speed = WALKSPEED;
+	crafty_obj.x += crafty_obj._speed;
+}
+
+function left_logic(crafty_obj){
+
+	if (crafty_obj.isDown("SPACE") && player1.hit("ball")) shootball("LEFT");
+	if(crafty_obj.isDown("SHIFT")) crafty_obj._speed = RUNSPEED;
+	else crafty_obj._speed = WALKSPEED;
+	crafty_obj.x -= crafty_obj._speed; 
+
+}
+
+function up_logic(crafty_obj){
+
+	if (crafty_obj.isDown("SPACE") && player1.hit("ball")) shootball("UP");
+	if(crafty_obj.isDown("SHIFT"))crafty_obj._speed = RUNSPEED;
+	else crafty_obj._speed = WALKSPEED;
+	crafty_obj.y -= crafty_obj._speed;
+
+}
+
+
+function down_logic(crafty_obj){
+	
+	if (crafty_obj.isDown("SPACE") && player1.hit("ball")) shootball("DOWN");
+	if(crafty_obj.isDown("SHIFT"))crafty_obj._speed = RUNSPEED;
+	else crafty_obj._speed = WALKSPEED;
+	crafty_obj.y += crafty_obj._speed;
+}
+
+
+
 function shootball(direction){
 if (direction == "LEFT") ball.x -= KICK;
 else if (direction == "RIGHT") ball.x += KICK;
