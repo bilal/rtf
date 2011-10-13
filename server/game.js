@@ -33,6 +33,11 @@ var INIT_P2_POS_X = INIT_BALL_POS_X + 2*SPRITE_SIZE;
 
 var WALKSPEED = 2;
 var RUNSPEED = 3;
+var KICK = 10;
+
+var P1SCORE = 0;
+var P2SCORE = 0;
+var WINSCORE = 5;
 
 window.onload = function() {
 	//start crafty
@@ -135,18 +140,22 @@ window.onload = function() {
 					//move the player in a direction depending on the booleans
 					//only move the player in one direction at a time (up/down/left/right)
 					if(this.isDown("RIGHT_ARROW")){
+						if (this.isDown("SPACE") && player1.hit("ball")) shootball("RIGHT");
 						if(this.isDown("SHIFT"))this._speed = RUNSPEED;
 						else this._speed = WALKSPEED;
 						this.x += this._speed;}						
 					else if(this.isDown("LEFT_ARROW")){ 
+						if (this.isDown("SPACE") && player1.hit("ball")) shootball("LEFT");
 						if(this.isDown("SHIFT")) this._speed = RUNSPEED;
 						else this._speed = WALKSPEED;
 						this.x -= this._speed; }
 					else if(this.isDown("UP_ARROW")){
+						if (this.isDown("SPACE") && player1.hit("ball")) shootball("UP");
 						if(this.isDown("SHIFT"))this._speed = RUNSPEED;
 						else this._speed = WALKSPEED;
 						this.y -= this._speed;}	
 					else if(this.isDown("DOWN_ARROW")){
+						if (this.isDown("SPACE") && player1.hit("ball")) shootball("DOWN");
 						if(this.isDown("SHIFT"))this._speed = RUNSPEED;
 						else this._speed = WALKSPEED;
 						this.y += this._speed; }
@@ -171,17 +180,21 @@ window.onload = function() {
 			
 					
 					 if(this.isDown("D")) {
-					 	if(this.isDown("G")) this.x += this._speed*2;
-						else this.x += this._speed; }
+					 	if(this.isDown("G"))this._speed = RUNSPEED;
+						else this._speed = WALKSPEED;
+						this.x += this._speed;}	
 					else if(this.isDown("A")){
-						if(this.isDown("G")) this.x -= this._speed*2;
-						else this.x -= this._speed; }
+						if(this.isDown("G")) this._speed = RUNSPEED;
+						else this._speed = WALKSPEED;
+						this.x -= this._speed; }
 					else if(this.isDown("W")) {
-						if(this.isDown("G")) this.y -= this._speed*2;
-						else this.y -= this._speed;} 	
+						if(this.isDown("G"))this._speed = RUNSPEED;
+						else this._speed = WALKSPEED;
+						this.y -= this._speed;} 	
 					else if(this.isDown("S")) {
-						if(this.isDown("G")) this.y += this._speed*2;
-						else this.y += this._speed; }
+						if(this.isDown("G"))this._speed = RUNSPEED;
+						else this._speed = WALKSPEED;
+						this.y += this._speed; }
 				});
 				
 				return this;
@@ -194,27 +207,27 @@ window.onload = function() {
 			.animate("ball_1", 1, 5, 3)
 		.collision()
 			.onHit("wall_left", function() {
-				this.x += this._speed;
-				this.stop();
+				logger("out of bounds");
+				checkoutofbounds();
 			}).onHit("goal_left", function() {
-				this.x += this._speed*2;
-				this.stop();
+				P2SCORE++;
+				checkgoalscored();
+				if (P2SCORE > WINSCORE) gameend("Player2");
 			}).onHit("goal_right", function() {
-				this.x -= this._speed*2;
-				this.stop();
+				P1SCORE++;
+				checkgoalscored();
+				if (P1SCORE > WINSCORE) gameend("Player1");
 			}).onHit("wall_right", function() {
-				this.x -= this._speed;
-				this.stop();
+				logger("out of bounds");
+				checkoutofbounds();
 			}).onHit("wall_bottom", function() {
-				this.y -= this._speed;
-				this.stop();
+				logger("out of bounds");
+				checkoutofbounds();
 			}).onHit("wall_top", function() {
-				this.y += this._speed;
-				this.stop();
+				logger("out of bounds");
+				checkoutofbounds();
 			})	
 		
-		
-		var player1HasBall = false;
 		//create our player entity with some premade components
 		player1 = Crafty.e("2D, Canvas, player1, Controls, CustomControls1, Animate, Collision")
 			.attr({x: INIT_P1_POS_X, y: INIT_P1_POS_Y, z: 1})
@@ -244,7 +257,7 @@ window.onload = function() {
 			.collision()
 			.onHit("wall_left", function() {
 				this.x += this._speed;
-				this.stop();
+				this.stop();				
 			}).onHit("goal_left", function() {
 				this.x += this._speed*2;
 				this.stop();
@@ -344,11 +357,30 @@ window.onload = function() {
 	});
 
 };
+function shootball(direction){
+if (direction == "LEFT") ball.x -= KICK;
+else if (direction == "RIGHT") ball.x += KICK;
+else if (direction == "UP") ball.y -+ KICK;
+else if (direction == "DOWN") ball.y += KICK;
+}
+function checkgoalscored(){
+player1.attr({x: INIT_P1_POS_X, y: INIT_P1_POS_Y, z: 1})
+player2.attr({x: INIT_P2_POS_X, y: INIT_P2_POS_Y, z: 1})
+ball.attr({x: INIT_BALL_POS_X, y: INIT_BALL_POS_Y, z: 1})
+logger("Score:" + P1SCORE + " - " + P2SCORE);
 
-
-
+}
+function checkoutofbounds(){
+player1.attr({x: INIT_P1_POS_X, y: INIT_P1_POS_Y, z: 1})
+player2.attr({x: INIT_P2_POS_X, y: INIT_P2_POS_Y, z: 1})
+ball.attr({x: INIT_BALL_POS_X, y: INIT_BALL_POS_Y, z: 1})
+}
+function gameend(player){
+logger(player + " Wins!!!");
+}
 //helper functions
 function logger(msg){
 	$("#body").append(msg);
 	$("#body").append("<br>")
 }
+
