@@ -67,15 +67,21 @@ function register_game_events(){
 	});
 
 	webSocket.on('game_player', function(msg){
-		logger(msg);
+		//logger(msg);
 		if (msg == '1'){
 			is_p1 = true;
 			is_p2 = false;
+			logger('players updated: you are player 1');
+			set_player_1_controls(player1);
 		}
 		else if (msg == '2'){
 			is_p1 = false;
 			is_p2 = true;
+			logger('players updated: you are player 2');
+			set_player_2_controls(player2);
 		}
+
+		
 	});
 
 }

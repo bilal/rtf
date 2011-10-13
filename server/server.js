@@ -27,7 +27,7 @@ var httpServer = http.createServer(function(request, response) {
         clientFiles.serve(request, response);
     });
 });
-httpServer.listen(2000);
+httpServer.listen(2000, "0.0.0.0");
 
 console.log("Server listening on port 2000 ... ")
 
