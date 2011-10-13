@@ -49,16 +49,19 @@ function register_game_events(){
 
 
 			if (msg.move == "RIGHT_ARROW"){
-				right_logic(pl);
+				right_logic(pl, msg);
 			}else if (msg.move == "LEFT_ARROW"){
-				left_logic(pl);
+				left_logic(pl, msg);
 			}else if (msg.move == "UP_ARROW"){		
-				up_logic(pl);
+				up_logic(pl, msg);
 			}else if (msg.move == "DOWN_ARROW"){
-				down_logic(pl);
+				down_logic(pl, msg);
+			}
+			else if(msg.move == "BALL"){
+				ball_logic(pl, msg);
 			}
 		});
-
+		
 	logger("registered for game move events");
 
 }
