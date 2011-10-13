@@ -32,3 +32,34 @@ $(document).ready(function() {
                 });
 		*/
             });
+
+
+function register_game_events(){	
+
+	
+	webSocket.on('game_move', function(msg){
+			//logger('game move: ' + JSON.stringify(msg));
+			var pl;
+
+			if (msg.player == "1"){
+				pl = player1;
+			}else if (msg.player == "2"){
+				pl = player2;
+			}
+
+
+			if (msg.move == "RIGHT_ARROW"){
+				right_logic(pl);
+			}else if (msg.move == "LEFT_ARROW"){
+				left_logic(pl);
+			}else if (msg.move == "UP_ARROW"){		
+				up_logic(pl);
+			}else if (msg.move == "DOWN_ARROW"){
+				down_logic(pl);
+			}
+		});
+
+	logger("registered for game move events");
+
+}
+

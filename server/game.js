@@ -39,6 +39,12 @@ var P1SCORE = 0;
 var P2SCORE = 0;
 var WINSCORE = 5;
 
+
+
+//player objects
+var player1;
+var player2;
+
 window.onload = function() {
 	//start crafty
 	Crafty.init(X_SIZE, Y_SIZE);
@@ -124,15 +130,21 @@ window.onload = function() {
 	//automatically play the loading scene
 	Crafty.scene("loading");
 	
+	//register for game move events
+	register_game_events();
+
 	Crafty.scene("main", function() {
 		generateWorld();
 		logger("Game Initialization Complete");
+
+		
 		
 		Crafty.c('CustomControls1', {
 			__move: {left: false, right: false, up: false, down: false},	
 			_speed: 3,
-			
+
 			CustomControls: function(speed) {
+				player1 = this;
 				if(speed) this._speed = speed;
 				var move = this.__move;
 				
@@ -142,22 +154,18 @@ window.onload = function() {
 					if(this.isDown("RIGHT_ARROW")){
 
 						webSocket.emit('game_move',{player:"1", move:"RIGHT_ARROW"});
-						right_logic(this);
 					}						
 					else if(this.isDown("LEFT_ARROW")){ 
 
 						webSocket.emit('game_move',{player:"1", move:"LEFT_ARROW"});
-						left_logic(this);
 					}
 					else if(this.isDown("UP_ARROW")){
 			
 						webSocket.emit('game_move',{player:"1", move:"UP_ARROW"});
-						up_logic(this);
 					}	
 					else if(this.isDown("DOWN_ARROW")){
 
 						webSocket.emit('game_move',{player:"1", move:"DOWN_ARROW"});
-						down_logic(this);
 					 }
 					
 				});
@@ -171,6 +179,7 @@ window.onload = function() {
 			_speed: 3,
 			
 			CustomControls: function(speed) {
+				player2 = this;
 				if(speed) this._speed = speed;
 				var move = this.__move;
 				

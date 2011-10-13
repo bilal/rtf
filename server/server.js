@@ -33,7 +33,9 @@ io.sockets.on('connection', function(socket) {
 
 	
     socket.on('game_move', function(message) {
-	console.log("message: " + JSON.stringify(message));
+	//console.log("message: " + JSON.stringify(message));
+	socket.broadcast.emit("game_move", message);
+	socket.emit("game_move",message);
 
 
    });
