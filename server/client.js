@@ -64,6 +64,7 @@ function register_game_events(){
 	webSocket.on('game_end', function(msg){
 		logger(msg);
 		// game end -- disconnect if I am a player
+		webSocket.disconnect();
 	});
 
 	webSocket.on('game_player', function(msg){

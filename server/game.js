@@ -302,7 +302,6 @@ window.onload = function() {
 };
 
 
-
 function set_player_1_controls(crafty_obj){
 
 	crafty_obj.bind('enterframe', function() {
