@@ -1,0 +1,13 @@
+To setup things
+===============
+
+Install node.js
+Install npm: http://npmjs.org/
+
+Then install:
+
+npm install node-static
+npm install socket.io
+
+
+
