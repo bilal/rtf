@@ -33,12 +33,14 @@ var INIT_P2_POS_X = INIT_BALL_POS_X + 2*SPRITE_SIZE;
 
 var WALKSPEED = 2;
 var RUNSPEED = 3;
-var KICK = 10;
+var KICK = 75;
 
 var P1SCORE = 0;
 var P2SCORE = 0;
 var WINSCORE = 5;
 
+var player1CanShoot = false;
+var player2CanShoot = false;
 
 
 //player objects
@@ -152,20 +154,20 @@ window.onload = function() {
 					//move the player in a direction depending on the booleans
 					//only move the player in one direction at a time (up/down/left/right)
 					if(this.isDown("RIGHT_ARROW")){
-
-						webSocket.emit('game_move',{player:"1", move:"RIGHT_ARROW"});
+						
+						webSocket.emit('game_move',{player:"1", move:"RIGHT_ARROW", space:this.isDown("SPACE"), shift:this.isDown("SHIFT"), canShoot:player1CanShoot});
 					}						
 					else if(this.isDown("LEFT_ARROW")){ 
 
-						webSocket.emit('game_move',{player:"1", move:"LEFT_ARROW"});
+						webSocket.emit('game_move',{player:"1", move:"LEFT_ARROW", space:this.isDown("SPACE"), shift:this.isDown("SHIFT"), canShoot:player1CanShoot});
 					}
 					else if(this.isDown("UP_ARROW")){
 			
-						webSocket.emit('game_move',{player:"1", move:"UP_ARROW"});
+						webSocket.emit('game_move',{player:"1", move:"UP_ARROW", space:this.isDown("SPACE"), shift:this.isDown("SHIFT"), canShoot:player1CanShoot});
 					}	
 					else if(this.isDown("DOWN_ARROW")){
 
-						webSocket.emit('game_move',{player:"1", move:"DOWN_ARROW"});
+						webSocket.emit('game_move',{player:"1", move:"DOWN_ARROW", space:this.isDown("SPACE"), shift:this.isDown("SHIFT"), canShoot:player1CanShoot});
 					 }
 					
 				});
@@ -186,24 +188,24 @@ window.onload = function() {
 				this.bind('enterframe', function() {
 					//move the player in a direction depending on the booleans
 					//only move the player in one direction at a time (up/down/left/right)
+
+					if(this.isDown("D")){
+						
+						webSocket.emit('game_move',{player:"2", move:"RIGHT_ARROW", space:this.isDown("K"), shift:this.isDown("G"), canShoot:player2CanShoot});
+					}						
+					else if(this.isDown("A")){ 
+
+						webSocket.emit('game_move',{player:"2", move:"LEFT_ARROW", space:this.isDown("K"), shift:this.isDown("G"), canShoot:player2CanShoot});
+					}
+					else if(this.isDown("W")){
 			
-					
-					 if(this.isDown("D")) {
-					 	if(this.isDown("G"))this._speed = RUNSPEED;
-						else this._speed = WALKSPEED;
-						this.x += this._speed;}	
-					else if(this.isDown("A")){
-						if(this.isDown("G")) this._speed = RUNSPEED;
-						else this._speed = WALKSPEED;
-						this.x -= this._speed; }
-					else if(this.isDown("W")) {
-						if(this.isDown("G"))this._speed = RUNSPEED;
-						else this._speed = WALKSPEED;
-						this.y -= this._speed;} 	
-					else if(this.isDown("S")) {
-						if(this.isDown("G"))this._speed = RUNSPEED;
-						else this._speed = WALKSPEED;
-						this.y += this._speed; }
+						webSocket.emit('game_move',{player:"2", move:"UP_ARROW", space:this.isDown("K"), shift:this.isDown("G"), canShoot:player2CanShoot});
+					}	
+					else if(this.isDown("S")){
+
+						webSocket.emit('game_move',{player:"2", move:"DOWN_ARROW", space:this.isDown("K"), shift:this.isDown("G"), canShoot:player2CanShoot});
+					 }
+					 
 				});
 				
 				return this;
@@ -245,22 +247,7 @@ window.onload = function() {
 			.animate("walk_right", 9, 3, 11)
 			.animate("walk_up", 3, 3, 5)
 			.animate("walk_down", 0, 3, 2)
-			.bind("enterframe", function(e) {
-				if(this.isDown("LEFT_ARROW")) {
-					if(!this.isPlaying("walk_left"))
-							this.stop().animate("walk_left", 10);
-				} else if(this.isDown("RIGHT_ARROW")) {
-					if(!this.isPlaying("walk_right"))
-						this.stop().animate("walk_right", 10);
-				} else if(this.isDown("UP_ARROW")) {
-					if(!this.isPlaying("walk_up"))
-						this.stop().animate("walk_up", 10);
-				} else if(this.isDown("DOWN_ARROW")) {
-					if(!this.isPlaying("walk_down"))
-						this.stop().animate("walk_down", 10);
-				}
-				
-			}).bind("keyup", function(e) {
+			.bind("keyup", function(e) {
 				this.stop();
 			})
 			.collision()
@@ -283,18 +270,18 @@ window.onload = function() {
 				this.y += this._speed;
 				this.stop();
 			}).onHit("ball", function() {
-				ball.animate("ball_1", 10);
+				player1CanShoot = true;
 				if(this.isPlaying("walk_left")){
-					ball.x -= this._speed;
+					webSocket.emit('game_move',{player:"1", direction:"left", move:"BALL"});
 				}
 				else if(this.isPlaying("walk_right")){
-					ball.x += this._speed;
+					webSocket.emit('game_move',{player:"1", direction:"right", move:"BALL"});
 				}
 				else if(this.isPlaying("walk_up")){
-					ball.y -= this._speed;
+					webSocket.emit('game_move',{player:"1", direction:"up", move:"BALL"});
 				}
 				else if(this.isPlaying("walk_down")){
-					ball.y += this._speed;
+					webSocket.emit('game_move',{player:"1", direction:"down", move:"BALL"});
 				}
 				this.stop();
 			});
@@ -309,21 +296,7 @@ window.onload = function() {
 			.animate("walk_right", 9, 1, 11)
 			.animate("walk_up", 3, 1, 5)
 			.animate("walk_down", 0, 1, 2)
-			.bind("enterframe", function(e) {
-				if(this.isDown("A")) {
-					if(!this.isPlaying("walk_left"))
-						this.stop().animate("walk_left", 10);
-				} else if(this.isDown("D")) {
-					if(!this.isPlaying("walk_right"))
-						this.stop().animate("walk_right", 10);
-				} else if(this.isDown("W")) {
-					if(!this.isPlaying("walk_up"))
-						this.stop().animate("walk_up", 10);
-				} else if(this.isDown("S")) {
-					if(!this.isPlaying("walk_down"))
-						this.stop().animate("walk_down", 10);
-				}
-			}).bind("keyup", function(e) {
+			.bind("keyup", function(e) {
 				this.stop();
 			})
 			.collision()
@@ -346,22 +319,21 @@ window.onload = function() {
 				this.y += this._speed;
 				this.stop();
 			}).onHit("ball", function() {
-				ball.animate("ball_1", 10);
+				player2CanShoot = true;
 				if(this.isPlaying("walk_left")){
-					ball.x -= this._speed;
+					webSocket.emit('game_move',{player:"2", direction:"left", move:"BALL"});
 				}
 				else if(this.isPlaying("walk_right")){
-					ball.x += this._speed;
+					webSocket.emit('game_move',{player:"2", direction:"right", move:"BALL"});
 				}
 				else if(this.isPlaying("walk_up")){
-					ball.y -= this._speed;
+					webSocket.emit('game_move',{player:"2", direction:"up", move:"BALL"});
 				}
 				else if(this.isPlaying("walk_down")){
-					ball.y += this._speed;
+					webSocket.emit('game_move',{player:"2", direction:"down", move:"BALL"});
 				}
 				this.stop();
-			});;
-			
+			});
 			
 	});
 
@@ -369,47 +341,88 @@ window.onload = function() {
 
 
 
-function right_logic(crafty_obj){
-	if (crafty_obj.isDown("SPACE") && player1.hit("ball")) shootball("RIGHT");
-	if(crafty_obj.isDown("SHIFT")) crafty_obj._speed = RUNSPEED;
-	else crafty_obj._speed = WALKSPEED;
-	crafty_obj.x += crafty_obj._speed;
-}
+function right_logic(crafty_obj, msg){
 
-function left_logic(crafty_obj){
-
-	if (crafty_obj.isDown("SPACE") && player1.hit("ball")) shootball("LEFT");
-	if(crafty_obj.isDown("SHIFT")) crafty_obj._speed = RUNSPEED;
-	else crafty_obj._speed = WALKSPEED;
-	crafty_obj.x -= crafty_obj._speed; 
-
-}
-
-function up_logic(crafty_obj){
-
-	if (crafty_obj.isDown("SPACE") && player1.hit("ball")) shootball("UP");
-	if(crafty_obj.isDown("SHIFT"))crafty_obj._speed = RUNSPEED;
-	else crafty_obj._speed = WALKSPEED;
-	crafty_obj.y -= crafty_obj._speed;
-
-}
-
-
-function down_logic(crafty_obj){
+		if(!crafty_obj.isPlaying("walk_right"))
+				crafty_obj.stop().animate("walk_right", 10);
+				
+		if(msg.space && msg.canShoot) {shootball("RIGHT");}
 	
-	if (crafty_obj.isDown("SPACE") && player1.hit("ball")) shootball("DOWN");
-	if(crafty_obj.isDown("SHIFT"))crafty_obj._speed = RUNSPEED;
-	else crafty_obj._speed = WALKSPEED;
-	crafty_obj.y += crafty_obj._speed;
+		if(msg.shift)crafty_obj._speed = RUNSPEED;
+		else crafty_obj._speed = WALKSPEED;						
+		crafty_obj.x += crafty_obj._speed;
 }
 
+function left_logic(crafty_obj, msg){
+
+		if(!crafty_obj.isPlaying("walk_left"))
+				crafty_obj.stop().animate("walk_left", 10);
+				
+		if(msg.space && msg.canShoot) {shootball("LEFT");}
+		
+		if(msg.shift)crafty_obj._speed = RUNSPEED;
+		else crafty_obj._speed = WALKSPEED;						
+		
+		crafty_obj.x -= crafty_obj._speed;
+
+}
+
+function up_logic(crafty_obj, msg){
+
+		if(!crafty_obj.isPlaying("walk_up"))
+				crafty_obj.stop().animate("walk_up", 10);
+		if(msg.space && msg.canShoot) {shootball("UP");}
+	
+		if(msg.shift)crafty_obj._speed = RUNSPEED;
+		else crafty_obj._speed = WALKSPEED;						
+		crafty_obj.y -= crafty_obj._speed;
+}
+
+
+function down_logic(crafty_obj, msg){
+
+		if(!crafty_obj.isPlaying("walk_down"))
+			crafty_obj.stop().animate("walk_down", 10);
+			
+		if(msg.space && msg.canShoot) {shootball("DOWN");}
+	
+		if(msg.shift)crafty_obj._speed = RUNSPEED;
+		else crafty_obj._speed = WALKSPEED;						
+		crafty_obj.y += crafty_obj._speed;
+}
+
+function ball_logic(crafty_obj, msg){
+		
+		ball.animate("ball_1", 10);
+		if(msg.direction == "left") {
+			ball.x -= crafty_obj._speed;	
+		}
+		else if(msg.direction == "right") {
+			ball.x += crafty_obj._speed;	
+		}		
+		else if(msg.direction == "up") {
+			ball.y -= crafty_obj._speed;	
+		}
+		else if(msg.direction == "down") {
+			ball.y += crafty_obj._speed;	
+		}
+}
 
 
 function shootball(direction){
 if (direction == "LEFT") ball.x -= KICK;
 else if (direction == "RIGHT") ball.x += KICK;
-else if (direction == "UP") ball.y -+ KICK;
+else if (direction == "UP") ball.y -= KICK;
 else if (direction == "DOWN") ball.y += KICK;
+
+if(ball.x > X_SIZE) ball.x = X_SIZE-1;
+if(ball.x < 0) ball.x = 1;
+if(ball.y > Y_SIZE) ball.y = Y_SIZE-1;
+if(ball.y < 0) ball.y = 1;
+
+player1CanShoot=false;
+player2CanShoot=false;
+
 }
 function checkgoalscored(){
 player1.attr({x: INIT_P1_POS_X, y: INIT_P1_POS_Y, z: 1})
