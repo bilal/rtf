@@ -33,11 +33,13 @@ var INIT_P2_POS_X = INIT_BALL_POS_X + 2*SPRITE_SIZE;
 
 var WALKSPEED = 2;
 var RUNSPEED = 3;
-var KICK = 10;
+var KICK = 75;
 
 var P1SCORE = 0;
 var P2SCORE = 0;
 var WINSCORE = 5;
+var player1CanShoot = false;
+var player2CanShoot = false;
 
 window.onload = function() {
 	//start crafty
@@ -140,26 +142,30 @@ window.onload = function() {
 					//move the player in a direction depending on the booleans
 					//only move the player in one direction at a time (up/down/left/right)
 					if(this.isDown("RIGHT_ARROW")){
-						if (this.isDown("SPACE") && player1.hit("ball")) shootball("RIGHT");
+						if(this.isDown("SPACE") && player1CanShoot) {shootball("RIGHT");player1CanShoot=false;}
+					
 						if(this.isDown("SHIFT"))this._speed = RUNSPEED;
-						else this._speed = WALKSPEED;
-						this.x += this._speed;}						
+						else this._speed = WALKSPEED;						
+						this.x += this._speed;
+					}						
 					else if(this.isDown("LEFT_ARROW")){ 
-						if (this.isDown("SPACE") && player1.hit("ball")) shootball("LEFT");
+						if(this.isDown("SPACE") && player1CanShoot) {shootball("LEFT");player1CanShoot=false;}
+
 						if(this.isDown("SHIFT")) this._speed = RUNSPEED;
 						else this._speed = WALKSPEED;
 						this.x -= this._speed; }
 					else if(this.isDown("UP_ARROW")){
-						if (this.isDown("SPACE") && player1.hit("ball")) shootball("UP");
+						if(this.isDown("SPACE") && player1CanShoot) {shootball("UP");player1CanShoot=false;}
+
 						if(this.isDown("SHIFT"))this._speed = RUNSPEED;
 						else this._speed = WALKSPEED;
 						this.y -= this._speed;}	
 					else if(this.isDown("DOWN_ARROW")){
-						if (this.isDown("SPACE") && player1.hit("ball")) shootball("DOWN");
+						if(this.isDown("SPACE") && player1CanShoot) {shootball("DOWN");player1CanShoot=false;}
+
 						if(this.isDown("SHIFT"))this._speed = RUNSPEED;
 						else this._speed = WALKSPEED;
-						this.y += this._speed; }
-					
+						this.y += this._speed; }				
 				});
 				
 				return this;
@@ -180,18 +186,26 @@ window.onload = function() {
 			
 					
 					 if(this.isDown("D")) {
+					 	if(this.isDown("K") && player2CanShoot) {shootball("RIGHT");player2CanShoot=false;}
+
 					 	if(this.isDown("G"))this._speed = RUNSPEED;
 						else this._speed = WALKSPEED;
 						this.x += this._speed;}	
 					else if(this.isDown("A")){
+						if(this.isDown("K") && player2CanShoot) {shootball("LEFT");player2CanShoot=false;}
+						
 						if(this.isDown("G")) this._speed = RUNSPEED;
 						else this._speed = WALKSPEED;
 						this.x -= this._speed; }
 					else if(this.isDown("W")) {
+						if(this.isDown("K") && player2CanShoot) {shootball("UP");player2CanShoot=false;}
+						
 						if(this.isDown("G"))this._speed = RUNSPEED;
 						else this._speed = WALKSPEED;
 						this.y -= this._speed;} 	
 					else if(this.isDown("S")) {
+						if(this.isDown("K") && player2CanShoot) {shootball("DOWN");player2CanShoot=false;}
+						
 						if(this.isDown("G"))this._speed = RUNSPEED;
 						else this._speed = WALKSPEED;
 						this.y += this._speed; }
@@ -274,6 +288,7 @@ window.onload = function() {
 				this.y += this._speed;
 				this.stop();
 			}).onHit("ball", function() {
+				player1CanShoot = true;
 				ball.animate("ball_1", 10);
 				if(this.isPlaying("walk_left")){
 					ball.x -= this._speed;
@@ -337,6 +352,7 @@ window.onload = function() {
 				this.y += this._speed;
 				this.stop();
 			}).onHit("ball", function() {
+				player2CanShoot = true;
 				ball.animate("ball_1", 10);
 				if(this.isPlaying("walk_left")){
 					ball.x -= this._speed;
@@ -360,8 +376,14 @@ window.onload = function() {
 function shootball(direction){
 if (direction == "LEFT") ball.x -= KICK;
 else if (direction == "RIGHT") ball.x += KICK;
-else if (direction == "UP") ball.y -+ KICK;
+else if (direction == "UP") ball.y -= KICK;
 else if (direction == "DOWN") ball.y += KICK;
+
+if(ball.x > X_SIZE) ball.x = X_SIZE-1;
+if(ball.x < 0) ball.x = 1;
+if(ball.y > Y_SIZE) ball.y = Y_SIZE-1;
+if(ball.y < 0) ball.y = 1;
+
 }
 function checkgoalscored(){
 player1.attr({x: INIT_P1_POS_X, y: INIT_P1_POS_Y, z: 1})
