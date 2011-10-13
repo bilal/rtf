@@ -15,6 +15,7 @@ var game_state = FINISHED;
 
 
 var users = new Array();
+var viewers = new Array();
 
 
 
@@ -43,7 +44,13 @@ io.sockets.on('connection', function(socket) {
 	console.log("message: " + message);
 	socket.set('player_name', message);
 	socket.broadcast.emit('message', message + ' has joined the game.');
-	users.push(socket);
+
+	if (users.length >= 2 ){
+		viewers.push(socket);
+	}else{
+		users.push(socket);
+	}
+	
 	update_game_state(socket);
 
     });
@@ -59,13 +66,14 @@ io.sockets.on('connection', function(socket) {
 
     socket.on('message', function(message) {
 	console.log("message: " + message);
-        var broadcastMessage = userName + ': ' + message;
-        socket.broadcast.emit('message',broadcastMessage);
+        //var broadcastMessage = userName + ': ' + message;
+        socket.broadcast.emit('message',message);
     });
 
     socket.on('disconnect', function() {
-        var broadcastMessage = userName + ' has left the zone.';
-        socket.broadcast.emit('message',broadcastMessage);
+        //var broadcastMessage = socket.get('player_name') + ' has left the zone.';
+        //socket.broadcast.emit('message',broadcastMessage);
+	remove_socket(socket);
 	update_game_state(socket);
     });
 });
@@ -73,14 +81,18 @@ io.sockets.on('connection', function(socket) {
 
 function update_game_state(socket)
 {
+
+	console.log('previous state: ' + game_state);
 	if (game_state == FINISHED){
 		//start a new game and notify players to reset their state
 		if (users.length == 1){
 			send_message_to_all(socket, 'game_reset', 'First player, started a new game ....');
 			game_state = WAITING_FOR_PLAYER;
 			send_message_to_all(socket, 'game_waiting', 'Waiting for another player to start ....');
+			socket.emit('game_player','1'); // telling the player about player 1 or 2
 			
 		}
+
 
 	}else if (game_state == WAITING_FOR_PLAYER){
 
@@ -89,6 +101,7 @@ function update_game_state(socket)
 			game_state = READY_FOR_START;
 			send_message_to_all(socket, 'game_ready', 'Ready to start the game ....');
 			game_state = STARTED;
+			socket.emit('game_player','2'); // telling the player about player 1 or 2
 			send_message_to_all(socket, 'game_start', 'Start the game ....');
 		}
 	}else if (game_state == STARTED){
@@ -103,9 +116,11 @@ function update_game_state(socket)
 		// if one player disconnects -- move away
 		if (users.length < 2){
 			game_state = FINISHED;
-			socekt.emit('game_end', 'Player left game end ....');
+			socket.broadcast.emit('game_end', 'Player left game end ....');
 		}
 	} 
+
+	console.log('new state: ' + game_state);
 
 }
 
@@ -117,4 +132,40 @@ function send_message_to_all(socket, msg_name, msg){
 	socket.emit(msg_name, msg);
 }
 
+
+function remove_socket(socket){
+
+  var deleted = false;
+  for(var i=0; i<users.length;i++ )
+  { 
+	  if(users[i].id == socket.id){
+	  	users.splice(i,1); 
+	  	deleted = true;
+	}
+  } 
+
+
+  if (deleted == false)
+  {
+	console.log('User removed ....');
+	return;
+  }
+
+  for (var j=0; j < viewers.length; j++){
+	
+	if (viewers[j].id == socket.id)	{
+		viewers.splice(j,1); 
+	  	deleted = true;
+	}
+
+ }
+
+ if (deleted)
+  {
+	console.log('Viewer removed ....');
+  }
+
+  return;
+
+}
 

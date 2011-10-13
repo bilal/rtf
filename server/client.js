@@ -34,7 +34,54 @@ $(document).ready(function() {
             });
 
 
-function register_game_events(){	
+
+function register_game_events(){
+
+	webSocket.on('game_reset', function(msg){
+		// reset game state
+		logger(msg);
+	});
+
+
+	webSocket.on('game_waiting', function(msg){
+		logger(msg);
+	});
+
+
+	webSocket.on('game_ready', function(msg){
+		logger(msg);
+		//do a game reset
+	});
+
+
+	webSocket.on('game_start', function(msg){
+		logger(msg);
+		// start game register for events
+		
+	});
+
+
+	webSocket.on('game_end', function(msg){
+		logger(msg);
+		// game end -- disconnect if I am a player
+	});
+
+	webSocket.on('game_player', function(msg){
+		logger(msg);
+		if (msg == '1'){
+			is_p1 = true;
+			is_p2 = false;
+		}
+		else if (msg == '2'){
+			is_p1 = false;
+			is_p2 = true;
+		}
+	});
+
+}
+
+
+function register_move_events(){	
 
 	
 	webSocket.on('game_move', function(msg){

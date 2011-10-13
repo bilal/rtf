@@ -42,6 +42,10 @@ var WINSCORE = 5;
 var player1CanShoot = false;
 var player2CanShoot = false;
 
+// if both p1 and p2 are false that means the user is a viewer
+var is_p1 = false;
+var is_p2 = false;
+
 
 //player objects
 var player1;
@@ -131,9 +135,12 @@ window.onload = function() {
 	
 	//automatically play the loading scene
 	Crafty.scene("loading");
+
+	//register for game events
+	register_game_events();
 	
 	//register for game move events
-	register_game_events();
+	register_move_events();
 
 	Crafty.scene("main", function() {
 		generateWorld();
