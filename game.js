@@ -1,30 +1,40 @@
 
 //Screen Size variables
-var HORIZONTAL_SIZE = 400;
-var VERTICAL_SIZE = 320;
+var X_SIZE = 800;
+var Y_SIZE = 640;
 
 var SPRITE_SIZE = 16;
-var X_BLOCKS = HORIZONTAL_SIZE/SPRITE_SIZE;
-var Y_BLOCKS = VERTICAL_SIZE/SPRITE_SIZE;
+var X_BLOCKS = X_SIZE/SPRITE_SIZE;
+var Y_BLOCKS = Y_SIZE/SPRITE_SIZE;
 
 //Goal related variables
 var GOAL_PATCH_SIZE = 10;
 var GOAL_SIZE = 60;
 var GOAL_EMPTY_SPACE = 10;
 var GOAL_NUM_PATCHES = (GOAL_SIZE - GOAL_EMPTY_SPACE)/GOAL_PATCH_SIZE;
-var GOAL_START = (VERTICAL_SIZE - GOAL_SIZE)/2;
+var GOAL_START = (Y_SIZE - GOAL_SIZE)/2;
 var GOAL_END = GOAL_START + GOAL_SIZE;
 
 //Play Area Variables
-var PLAY_AREAH_MIN = SPRITE_SIZE;
-var PLAY_AREA_H_MAX = HORIZONTAL_SIZE - SPRITE_SIZE;
-var PLAY_AREA_V_MIN = SPRITE_SIZE;
-var PLAY_AREA_V_MAX = VERTICAL_SIZE - SPRITE_SIZE;
+var PLAY_AREA_X_MIN = SPRITE_SIZE;
+var PLAY_AREA_X_MAX = X_SIZE - SPRITE_SIZE;
+var PLAY_AREA_Y_MIN = SPRITE_SIZE;
+var PLAY_AREA_Y_MAX = Y_SIZE - SPRITE_SIZE;
 
+
+//Initial Positions
+var INIT_BALL_POS_X = PLAY_AREA_X_MAX/2;
+var INIT_BALL_POS_Y = PLAY_AREA_Y_MAX/2;
+
+//same vertical position as the ball
+var INIT_P1_POS_Y = INIT_P2_POS_Y = INIT_BALL_POS_Y;
+
+var INIT_P1_POS_X = INIT_BALL_POS_X - 2*SPRITE_SIZE;
+var INIT_P2_POS_X = INIT_BALL_POS_X + 2*SPRITE_SIZE;
 
 window.onload = function() {
 	//start crafty
-	Crafty.init(HORIZONTAL_SIZE, VERTICAL_SIZE);
+	Crafty.init(X_SIZE, Y_SIZE);
 	Crafty.canvas();
 	
 	//turn the sprite map into usable components
@@ -59,7 +69,7 @@ window.onload = function() {
 			Crafty.e("2D, Canvas, wall_top, bush"+Crafty.randRange(1,2))
 				.attr({x: i * SPRITE_SIZE, y: 0, z: 2});
 			Crafty.e("2D, DOM, wall_bottom, bush"+Crafty.randRange(1,2))
-				.attr({x: i * SPRITE_SIZE, y: PLAY_AREA_V_MAX, z: 2});
+				.attr({x: i * SPRITE_SIZE, y: PLAY_AREA_Y_MAX, z: 2});
 		}
 		
 
@@ -73,7 +83,7 @@ window.onload = function() {
 			Crafty.e("2D, DOM, wall_left, bush"+Crafty.randRange(1,2))
 				.attr({x: 0, y: i * SPRITE_SIZE, z: 2});
 			Crafty.e("2D, Canvas, wall_right, bush"+Crafty.randRange(1,2))
-				.attr({x: PLAY_AREA_H_MAX, y: i * SPRITE_SIZE, z: 2});
+				.attr({x: PLAY_AREA_X_MAX, y: i * SPRITE_SIZE, z: 2});
 		}
 		
 		//create the goals
@@ -83,7 +93,7 @@ window.onload = function() {
 			.attr({x: 0, y: (GOAL_START + (GOAL_EMPTY_SPACE/2) + (i*GOAL_PATCH_SIZE)), z: 2});
 		
 		Crafty.e("2D, Canvas, goal_right, goal")
-			.attr({x: PLAY_AREA_H_MAX, y: (GOAL_START + (GOAL_EMPTY_SPACE/2) + (i*GOAL_PATCH_SIZE)), z: 2});	
+			.attr({x: PLAY_AREA_X_MAX, y: (GOAL_START + (GOAL_EMPTY_SPACE/2) + (i*GOAL_PATCH_SIZE)), z: 2});	
 		}
 		
 
@@ -173,7 +183,7 @@ window.onload = function() {
 		
 		//ball
 		ball = Crafty.e("2D, Canvas, ball, Controls3, CustomControls3, Animate, Collision")
-			.attr({x: 182, y: 144, z: 1})
+			.attr({x: INIT_BALL_POS_X, y: INIT_BALL_POS_Y, z: 1})
 			.animate("ball_1", 1, 5, 3)
 		.collision()
 			.onHit("wall_left", function() {
@@ -200,7 +210,7 @@ window.onload = function() {
 		var player1HasBall = false;
 		//create our player entity with some premade components
 		player1 = Crafty.e("2D, Canvas, player1, Controls, CustomControls1, Animate, Collision")
-			.attr({x: 160, y: 144, z: 1})
+			.attr({x: INIT_P1_POS_X, y: INIT_P1_POS_Y, z: 1})
 			.CustomControls(1)
 			.animate("walk_left", 6, 3, 8)
 			.animate("walk_right", 9, 3, 11)
@@ -264,7 +274,7 @@ window.onload = function() {
 			
 					//create our player entity with some premade components
 		player2 = Crafty.e("2D, Canvas, player2, Controls, CustomControls2, Animate, Collision")
-			.attr({x: 160, y: 10, z: 1})
+			.attr({x: INIT_P2_POS_X, y: INIT_P2_POS_Y, z: 1})
 			.CustomControls(1)
 			.animate("walk_left", 6, 1, 8)
 			.animate("walk_right", 9, 1, 11)
