@@ -64,6 +64,19 @@ io.sockets.on('connection', function(socket) {
 
    });
 
+
+   socket.on('game_score', function(message) {
+	//console.log("message: " + JSON.stringify(message));
+	socket.broadcast.emit("game_score", message);
+	socket.emit("game_score",message);
+
+
+	//continue the game
+	socket.broadcast.emit("game_resume", "resume game");
+	socket.emit("game_resume","resume game");
+
+   });
+
     socket.on('message', function(message) {
 	console.log("message: " + message);
         //var broadcastMessage = userName + ': ' + message;

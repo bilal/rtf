@@ -37,6 +37,17 @@ $(document).ready(function() {
 
 function register_game_events(){
 
+
+	webSocket.on('game_resume', function(msg){
+		logger(msg);
+		resume_game();
+		
+	});
+
+	webSocket.on('game_score', function(msg){
+		update_score(msg.score_p1, msg.score_p2);
+	});
+
 	webSocket.on('game_reset', function(msg){
 		logger(msg);
 		reset_game();

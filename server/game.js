@@ -50,6 +50,8 @@ var is_p2 = false;
 var player1;
 var player2;
 
+var game_pause = false;
+
 window.onload = function() {
 	//start crafty
 	Crafty.init(X_SIZE, Y_SIZE);
@@ -194,10 +196,12 @@ window.onload = function() {
 				checkoutofbounds();
 			}).onHit("goal_left", function() {
 				P2SCORE++;
+				webSocket.emit('game_score', {score_p1:P1SCORE, score_p2:P2SCORE});
 				checkgoalscored();
 				if (P2SCORE > WINSCORE) gameend("Player2");
 			}).onHit("goal_right", function() {
 				P1SCORE++;
+				webSocket.emit('game_score', {score_p1:P1SCORE, score_p2:P2SCORE});
 				checkgoalscored();
 				if (P1SCORE > WINSCORE) gameend("Player1");
 			}).onHit("wall_right", function() {
@@ -209,7 +213,7 @@ window.onload = function() {
 			}).onHit("wall_top", function() {
 				logger("out of bounds");
 				checkoutofbounds();
-			})	
+			});	
 		
 		//create our player entity with some premade components
 		player1 = Crafty.e("2D, Canvas, player1, Controls, CustomControls1, Animate, Collision")
@@ -312,12 +316,37 @@ window.onload = function() {
 };
 
 
-function reset_game()
+
+function resume_game(){
+
+	position_reset();
+	game_pause = false;
+}
+
+
+function update_score(score1, score2){
+
+	P1SCORE = score1;
+	P2SCORE = score2;
+	game_pause = true;
+	position_reset();
+	logger("Score:" + P1SCORE + " - " + P2SCORE);
+
+}
+
+function position_reset()
 {
 	player1.attr({x: INIT_P1_POS_X, y: INIT_P1_POS_Y, z: 1});
 	player2.attr({x: INIT_P2_POS_X, y: INIT_P2_POS_Y, z: 1});
 	ball.attr({x: INIT_BALL_POS_X, y: INIT_BALL_POS_Y, z: 1});
-	PISCORE = P2SCORE = 0;
+
+}
+
+
+function reset_game()
+{
+	position_reset();
+	P1SCORE = P2SCORE = 0;
 	logger("Score:" + P1SCORE + " - " + P2SCORE);
 
 }
