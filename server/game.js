@@ -52,6 +52,9 @@ var player2;
 
 var game_pause = false;
 
+	var p1Score=0;
+	var p2Score=0;
+
 window.onload = function() {
 	//start crafty
 	Crafty.init(X_SIZE, Y_SIZE);
@@ -77,8 +80,20 @@ window.onload = function() {
 		topleftb: [0,5],
 		toprightb: [1,5],
 		bottomleftb: [2,5],
-		bottomrightb: [3,5]
+		bottomrightb: [3,5],
+		num0: [8,3],
+		num8: [9,3],
+		num9: [10,3],
+		numDash: [11,3],
+		num1: [5,4],
+		num2: [6,4],
+		num3: [7,4],
+		num4: [8,4],
+		num5: [9,4],
+		num6: [10,4],
+		num7: [11,4]
 	});
+	
 	
 	//method to randomy generate the map
 	function generateWorld() {
@@ -151,55 +166,63 @@ window.onload = function() {
 		
 		//left box
 		Crafty.e("2D, Canvas, topleftb, topleftb")
-		.attr({x: 0, y:GOAL_SIZE, z:2});
+		.attr({x: 0, y:GOAL_SIZE});
 		Crafty.e("2D, Canvas, toprightb, toprightb")
-		.attr({x:GOAL_SIZE + SPRITE_SIZE -1, y: GOAL_SIZE, z:2});
+		.attr({x:GOAL_SIZE + SPRITE_SIZE -1, y: GOAL_SIZE});
 		Crafty.e("2D, Canvas, bottomrightb, bottomrightb")
-		.attr({x:GOAL_SIZE + SPRITE_SIZE -1, y: (PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE), z:2});
+		.attr({x:GOAL_SIZE + SPRITE_SIZE -1, y: (PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE)});
 		Crafty.e("2D, Canvas, bottomleftb, bottomleftb")
-		.attr({x: 0, y:(PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE), z:2});
+		.attr({x: 0, y:(PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE)});
 				
 		for(var i = 1; i<GOAL_SIZE/SPRITE_SIZE+1; i++){
 		Crafty.e("2D, Canvas, top_box, hline")
-		.attr({x: i*SPRITE_SIZE, y: GOAL_SIZE, z:2});
+		.attr({x: i*SPRITE_SIZE, y: GOAL_SIZE});
 		Crafty.e("2D, Canvas, bottom_box, hline")
-		.attr({x: i*SPRITE_SIZE, y: (PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE), z:2});
+		.attr({x: i*SPRITE_SIZE, y: (PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE)});
 		}
 		for(var i = ((GOAL_SIZE/SPRITE_SIZE)+1); i < (PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE)/SPRITE_SIZE; i++){
 		Crafty.e ("2D, Canvas, rightbox, line")
-		.attr({x: GOAL_SIZE+SPRITE_SIZE, y: i*SPRITE_SIZE, z:2});
+		.attr({x: GOAL_SIZE+SPRITE_SIZE, y: i*SPRITE_SIZE});
 		}
 		
 		
 		//right box
-				Crafty.e("2D, Canvas, toprightb, toprightb")
-		.attr({x: PLAY_AREA_X_MAX, y:GOAL_SIZE, z:2});
+		Crafty.e("2D, Canvas, toprightb, toprightb")
+		.attr({x: PLAY_AREA_X_MAX, y:GOAL_SIZE});
 		Crafty.e("2D, Canvas, topleftb, topleftb")
-		.attr({x: PLAY_AREA_X_MAX-(GOAL_SIZE + SPRITE_SIZE +1), y: GOAL_SIZE, z:2});
+		.attr({x: PLAY_AREA_X_MAX-(GOAL_SIZE + SPRITE_SIZE +1), y: GOAL_SIZE});
 		Crafty.e("2D, Canvas, bottomleftb, bottomleftb")
-		.attr({x:PLAY_AREA_X_MAX - (GOAL_SIZE + SPRITE_SIZE +1), y: (PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE), z:2});
+		.attr({x:PLAY_AREA_X_MAX - (GOAL_SIZE + SPRITE_SIZE +1), y: (PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE)});
 		Crafty.e("2D, Canvas, bottomrightb, bottomrightb")
-		.attr({x: PLAY_AREA_X_MAX, y:(PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE), z:2});
+		.attr({x: PLAY_AREA_X_MAX, y:(PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE)});
 				
 		for(var i = 1; i<GOAL_SIZE/SPRITE_SIZE+1; i++){
 		Crafty.e("2D, Canvas, top_box, hline")
-		.attr({x: PLAY_AREA_X_MAX- (i*SPRITE_SIZE), y: GOAL_SIZE, z:2});
+		.attr({x: PLAY_AREA_X_MAX- (i*SPRITE_SIZE), y: GOAL_SIZE});
 		Crafty.e("2D, Canvas, bottom_box, hline")
-		.attr({x: PLAY_AREA_X_MAX- (i*SPRITE_SIZE), y: (PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE), z:2});
+		.attr({x: PLAY_AREA_X_MAX- (i*SPRITE_SIZE), y: (PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE)});
 		}
 		for(var i = ((GOAL_SIZE/SPRITE_SIZE)+1); i < (PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE)/SPRITE_SIZE; i++){
 		Crafty.e ("2D, Canvas, rightbox, line")
-		.attr({x: PLAY_AREA_X_MAX- (GOAL_SIZE)-SPRITE_SIZE, y: i*SPRITE_SIZE, z:2});
+		.attr({x: PLAY_AREA_X_MAX- (GOAL_SIZE)-SPRITE_SIZE, y: i*SPRITE_SIZE});
 		}
+		
+		//score board
+		Crafty.e("2D, DOM, Image").image("score.png").attr({x:(PLAY_AREA_X_MAX/2)-64, y:0});
+		Crafty.e("2D, DOM, numDash").attr({x:(PLAY_AREA_X_MAX/2), y:0});
+		
+		Crafty.e("2D, DOM, num0").attr({x:(PLAY_AREA_X_MAX/2)+32,y:0});
+		Crafty.e("2D, DOM, num0").attr({x:(PLAY_AREA_X_MAX/2)-32,y:0});
+
 		
 		//create the goals
 		for(var i = 0; i<GOAL_NUM_PATCHES; i++) {
 		
 		Crafty.e("2D, Canvas, goal_left, goal")
-			.attr({x: 0, y: (GOAL_START + (GOAL_EMPTY_SPACE/2) + (i*GOAL_PATCH_SIZE)), z: 2});
+			.attr({x: 0, y: (GOAL_START + (GOAL_EMPTY_SPACE/2) + (i*GOAL_PATCH_SIZE))});
 		
 		Crafty.e("2D, Canvas, goal_right, goal")
-			.attr({x: PLAY_AREA_X_MAX, y: (GOAL_START + (GOAL_EMPTY_SPACE/2) + (i*GOAL_PATCH_SIZE)), z: 2});	
+			.attr({x: PLAY_AREA_X_MAX, y: (GOAL_START + (GOAL_EMPTY_SPACE/2) + (i*GOAL_PATCH_SIZE))});	
 		}
 		
 
@@ -209,7 +232,7 @@ window.onload = function() {
 	//the loading screen that will display while our assets load
 	Crafty.scene("loading", function() {
 		//load takes an array of assets and a callback when complete
-		Crafty.load(["sprite4.png"], function() {
+		Crafty.load(["sprite4.png", "score.png"], function() {
 			Crafty.scene("main"); //when everything is loaded, run the main scene
 		});
 		
@@ -405,12 +428,19 @@ function resume_game(){
 
 function update_score(score1, score2){
 
+	
 	P1SCORE = score1;
 	P2SCORE = score2;
 	game_pause = true;
 	position_reset();
-	logger("Score:" + P1SCORE + " - " + P2SCORE);
 
+	Crafty.e("2D, DOM, Image").image("score.png").attr({x:(PLAY_AREA_X_MAX/2)-64, y:0});
+	Crafty.e("2D, DOM, numDash").attr({x:(PLAY_AREA_X_MAX/2), y:0});
+		
+	Crafty.e("2D, DOM, num"+P2SCORE).attr({x:(PLAY_AREA_X_MAX/2)+32,y:0});
+	Crafty.e("2D, DOM, num"+P1SCORE).attr({x:(PLAY_AREA_X_MAX/2)-32,y:0});
+
+	
 }
 
 function position_reset()
