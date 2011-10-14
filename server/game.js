@@ -320,7 +320,9 @@ window.onload = function() {
 			}).onHit("wall_top", function() {
 				this.y += this._speed;
 				this.stop();
-			}).onHit("ball", function() {
+			})
+			.collision(new Crafty.polygon([ball.x,ball.y], [16, 16]))
+			.onHit("ball", function() {
 				player1CanShoot = true;
 				if(this.isPlaying("walk_left")){
 					webSocket.emit('game_move',{player:"1", direction:"left", move:"BALL", speed:this._speed});
@@ -369,7 +371,9 @@ window.onload = function() {
 			}).onHit("wall_top", function() {
 				this.y += this._speed;
 				this.stop();
-			}).onHit("ball", function() {
+			})
+			.collision(new Crafty.polygon([ball.x,ball.y], [16, 16]))
+			.onHit("ball", function() {
 				player2CanShoot = true;
 				if(this.isPlaying("walk_left")){
 					webSocket.emit('game_move',{player:"2", direction:"left", move:"BALL", speed:this._speed});

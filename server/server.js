@@ -18,7 +18,7 @@ var users = new Array();
 var viewers = new Array();
 
 
-
+var port = 2000
 
 var clientFiles = new (static.Server)('.');
 
@@ -27,9 +27,9 @@ var httpServer = http.createServer(function(request, response) {
         clientFiles.serve(request, response);
     });
 });
-httpServer.listen(2000, "0.0.0.0");
+httpServer.listen(port, "0.0.0.0");
 
-console.log("Server listening on port 2000 ... ")
+console.log("Server listening on port " + port + " ... ")
 
 var io = socketIO.listen(httpServer);
 io.sockets.on('connection', function(socket) {
