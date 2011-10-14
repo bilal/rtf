@@ -1,7 +1,7 @@
 var webSocket;
 
 $(document).ready(function() {
-                webSocket = new io.connect('http://localhost', { port: 2000 });
+                webSocket = new io.connect('ws://192.168.85.180', { port: 2000 });
 
                 webSocket.on('connect', function() {
                    logger("Connected to the server");

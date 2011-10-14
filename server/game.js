@@ -68,7 +68,16 @@ window.onload = function() {
 		goal: [0,3],
 		ball: [0, 4],
 		line: [1,3],
-		hline: [2,3]
+		hline: [2,3],
+		topleft: [4,3],
+		topright: [5,3],
+		bottomleft: [6,3],
+		bottomright: [7,3],
+		centercircle: [3,3],
+		topleftb: [0,5],
+		toprightb: [1,5],
+		bottomleftb: [2,5],
+		bottomrightb: [3,5]
 	});
 	
 	//method to randomy generate the map
@@ -94,6 +103,15 @@ window.onload = function() {
 				
 			}
 		}
+		//cornor flags
+		Crafty.e("2D, Canvas, topleft, topleft")
+		.attr({x:0, y:0,z:2});
+		Crafty.e("2D, Canvas, topright, topright")
+		.attr({x: (X_SIZE - SPRITE_SIZE), y:0,z:2});
+		Crafty.e("2D, Canvas, bottomleft, bottomleft")
+		.attr({x: 0, y:PLAY_AREA_Y_MAX, z:2});
+		Crafty.e("2D, Canvas, bottomright, bottomright")
+		.attr({x: (X_SIZE - SPRITE_SIZE), y:PLAY_AREA_Y_MAX, z:2});
 		
 		//create the bushes along the x-axis which will form the boundaries
 		for(var i = 1; i < X_BLOCKS - 1; i++) {
@@ -103,6 +121,20 @@ window.onload = function() {
 				.attr({x: i * SPRITE_SIZE, y: PLAY_AREA_Y_MAX, z: 2});
 		}
 		
+	
+		//generate center line
+		Crafty.e("2D, Canvas, top, topleftb")
+		.attr({x:PLAY_AREA_X_MAX/2, y:0});
+		Crafty.e("2D, Canvas, top, bottomleftb")
+		.attr({x:PLAY_AREA_X_MAX/2, y:Y_SIZE-SPRITE_SIZE});
+		
+		for(var i = 1; i < Y_BLOCKS -1 ; i++) {
+			Crafty.e("2D, Canvas, centerline, line")
+				.attr({x: PLAY_AREA_X_MAX/2, y: i *SPRITE_SIZE});
+		}
+		//generate center circle
+		Crafty.e("2D, Canvas, centercircle, centercircle")
+			.attr({x: PLAY_AREA_X_MAX/2, y: PLAY_AREA_Y_MAX/2, z:1});
 
 		//create the bushes along the y-axis
 		//we need to start one more and one less to not overlap the previous bushes
@@ -115,6 +147,49 @@ window.onload = function() {
 				.attr({x: 0, y: i * SPRITE_SIZE, z: 2});
 			Crafty.e("2D, Canvas, wall_right, line")
 				.attr({x: PLAY_AREA_X_MAX, y: i * SPRITE_SIZE, z: 2});
+		}
+		
+		//left box
+		Crafty.e("2D, Canvas, topleftb, topleftb")
+		.attr({x: 0, y:GOAL_SIZE, z:2});
+		Crafty.e("2D, Canvas, toprightb, toprightb")
+		.attr({x:GOAL_SIZE + SPRITE_SIZE -1, y: GOAL_SIZE, z:2});
+		Crafty.e("2D, Canvas, bottomrightb, bottomrightb")
+		.attr({x:GOAL_SIZE + SPRITE_SIZE -1, y: (PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE), z:2});
+		Crafty.e("2D, Canvas, bottomleftb, bottomleftb")
+		.attr({x: 0, y:(PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE), z:2});
+				
+		for(var i = 1; i<GOAL_SIZE/SPRITE_SIZE+1; i++){
+		Crafty.e("2D, Canvas, top_box, hline")
+		.attr({x: i*SPRITE_SIZE, y: GOAL_SIZE, z:2});
+		Crafty.e("2D, Canvas, bottom_box, hline")
+		.attr({x: i*SPRITE_SIZE, y: (PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE), z:2});
+		}
+		for(var i = ((GOAL_SIZE/SPRITE_SIZE)+1); i < (PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE)/SPRITE_SIZE; i++){
+		Crafty.e ("2D, Canvas, rightbox, line")
+		.attr({x: GOAL_SIZE+SPRITE_SIZE, y: i*SPRITE_SIZE, z:2});
+		}
+		
+		
+		//right box
+				Crafty.e("2D, Canvas, toprightb, toprightb")
+		.attr({x: PLAY_AREA_X_MAX, y:GOAL_SIZE, z:2});
+		Crafty.e("2D, Canvas, topleftb, topleftb")
+		.attr({x: PLAY_AREA_X_MAX-(GOAL_SIZE + SPRITE_SIZE +1), y: GOAL_SIZE, z:2});
+		Crafty.e("2D, Canvas, bottomleftb, bottomleftb")
+		.attr({x:PLAY_AREA_X_MAX - (GOAL_SIZE + SPRITE_SIZE +1), y: (PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE), z:2});
+		Crafty.e("2D, Canvas, bottomrightb, bottomrightb")
+		.attr({x: PLAY_AREA_X_MAX, y:(PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE), z:2});
+				
+		for(var i = 1; i<GOAL_SIZE/SPRITE_SIZE+1; i++){
+		Crafty.e("2D, Canvas, top_box, hline")
+		.attr({x: PLAY_AREA_X_MAX- (i*SPRITE_SIZE), y: GOAL_SIZE, z:2});
+		Crafty.e("2D, Canvas, bottom_box, hline")
+		.attr({x: PLAY_AREA_X_MAX- (i*SPRITE_SIZE), y: (PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE), z:2});
+		}
+		for(var i = ((GOAL_SIZE/SPRITE_SIZE)+1); i < (PLAY_AREA_Y_MAX - GOAL_SIZE + SPRITE_SIZE)/SPRITE_SIZE; i++){
+		Crafty.e ("2D, Canvas, rightbox, line")
+		.attr({x: PLAY_AREA_X_MAX- (GOAL_SIZE)-SPRITE_SIZE, y: i*SPRITE_SIZE, z:2});
 		}
 		
 		//create the goals
