@@ -38,8 +38,8 @@ $(document).ready(function() {
 function register_game_events(){
 
 	webSocket.on('game_reset', function(msg){
-		// reset game state
 		logger(msg);
+		reset_game();
 	});
 
 
@@ -50,12 +50,12 @@ function register_game_events(){
 
 	webSocket.on('game_ready', function(msg){
 		logger(msg);
-		//do a game reset
 	});
 
 
 	webSocket.on('game_start', function(msg){
 		logger(msg);
+		reset_game();
 		// start game register for events
 		
 	});

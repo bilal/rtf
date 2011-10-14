@@ -312,6 +312,17 @@ window.onload = function() {
 };
 
 
+function reset_game()
+{
+	player1.attr({x: INIT_P1_POS_X, y: INIT_P1_POS_Y, z: 1})
+	player2.attr({x: INIT_P2_POS_X, y: INIT_P2_POS_Y, z: 1})
+	ball.attr({x: INIT_BALL_POS_X, y: INIT_BALL_POS_Y, z: 1})
+	PISCORE = p2SCORE = 0;
+	logger("Score:" + P1SCORE + " - " + P2SCORE);
+
+}
+
+
 function set_player_1_controls(crafty_obj){
 
 	crafty_obj.bind('enterframe', function() {
