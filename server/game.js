@@ -314,10 +314,10 @@ window.onload = function() {
 
 function reset_game()
 {
-	player1.attr({x: INIT_P1_POS_X, y: INIT_P1_POS_Y, z: 1})
-	player2.attr({x: INIT_P2_POS_X, y: INIT_P2_POS_Y, z: 1})
-	ball.attr({x: INIT_BALL_POS_X, y: INIT_BALL_POS_Y, z: 1})
-	PISCORE = p2SCORE = 0;
+	player1.attr({x: INIT_P1_POS_X, y: INIT_P1_POS_Y, z: 1});
+	player2.attr({x: INIT_P2_POS_X, y: INIT_P2_POS_Y, z: 1});
+	ball.attr({x: INIT_BALL_POS_X, y: INIT_BALL_POS_Y, z: 1});
+	PISCORE = P2SCORE = 0;
 	logger("Score:" + P1SCORE + " - " + P2SCORE);
 
 }
@@ -460,16 +460,16 @@ player2CanShoot=false;
 
 }
 function checkgoalscored(){
-player1.attr({x: INIT_P1_POS_X, y: INIT_P1_POS_Y, z: 1})
-player2.attr({x: INIT_P2_POS_X, y: INIT_P2_POS_Y, z: 1})
-ball.attr({x: INIT_BALL_POS_X, y: INIT_BALL_POS_Y, z: 1})
+player1.attr({x: INIT_P1_POS_X, y: INIT_P1_POS_Y, z: 1});
+player2.attr({x: INIT_P2_POS_X, y: INIT_P2_POS_Y, z: 1});
+ball.attr({x: INIT_BALL_POS_X, y: INIT_BALL_POS_Y, z: 1});
 logger("Score:" + P1SCORE + " - " + P2SCORE);
 
 }
 function checkoutofbounds(){
-player1.attr({x: INIT_P1_POS_X, y: INIT_P1_POS_Y, z: 1})
-player2.attr({x: INIT_P2_POS_X, y: INIT_P2_POS_Y, z: 1})
-ball.attr({x: INIT_BALL_POS_X, y: INIT_BALL_POS_Y, z: 1})
+player1.attr({x: INIT_P1_POS_X, y: INIT_P1_POS_Y, z: 1});
+player2.attr({x: INIT_P2_POS_X, y: INIT_P2_POS_Y, z: 1});
+ball.attr({x: INIT_BALL_POS_X, y: INIT_BALL_POS_Y, z: 1});
 }
 function gameend(player){
 logger(player + " Wins!!!");
@@ -477,6 +477,6 @@ logger(player + " Wins!!!");
 //helper functions
 function logger(msg){
 	$("#body").append(msg);
-	$("#body").append("<br>")
+	$("#body").append("<br>");
 }
 
