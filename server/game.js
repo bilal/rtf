@@ -248,16 +248,16 @@ window.onload = function() {
 			}).onHit("ball", function() {
 				player1CanShoot = true;
 				if(this.isPlaying("walk_left")){
-					webSocket.emit('game_move',{player:"1", direction:"left", move:"BALL"});
+					webSocket.emit('game_move',{player:"1", direction:"left", move:"BALL", speed:this._speed});
 				}
 				else if(this.isPlaying("walk_right")){
-					webSocket.emit('game_move',{player:"1", direction:"right", move:"BALL"});
+					webSocket.emit('game_move',{player:"1", direction:"right", move:"BALL", speed:this._speed});
 				}
 				else if(this.isPlaying("walk_up")){
-					webSocket.emit('game_move',{player:"1", direction:"up", move:"BALL"});
+					webSocket.emit('game_move',{player:"1", direction:"up", move:"BALL", speed:this._speed});
 				}
 				else if(this.isPlaying("walk_down")){
-					webSocket.emit('game_move',{player:"1", direction:"down", move:"BALL"});
+					webSocket.emit('game_move',{player:"1", direction:"down", move:"BALL", speed:this._speed});
 				}
 				this.stop();
 			});
@@ -297,16 +297,16 @@ window.onload = function() {
 			}).onHit("ball", function() {
 				player2CanShoot = true;
 				if(this.isPlaying("walk_left")){
-					webSocket.emit('game_move',{player:"2", direction:"left", move:"BALL"});
+					webSocket.emit('game_move',{player:"2", direction:"left", move:"BALL", speed:this._speed});
 				}
 				else if(this.isPlaying("walk_right")){
-					webSocket.emit('game_move',{player:"2", direction:"right", move:"BALL"});
+					webSocket.emit('game_move',{player:"2", direction:"right", move:"BALL", speed:this._speed});
 				}
 				else if(this.isPlaying("walk_up")){
-					webSocket.emit('game_move',{player:"2", direction:"up", move:"BALL"});
+					webSocket.emit('game_move',{player:"2", direction:"up", move:"BALL", speed:this._speed});
 				}
 				else if(this.isPlaying("walk_down")){
-					webSocket.emit('game_move',{player:"2", direction:"down", move:"BALL"});
+					webSocket.emit('game_move',{player:"2", direction:"down", move:"BALL", speed:this._speed});
 				}
 				this.stop();
 			});
@@ -457,18 +457,19 @@ function down_logic(crafty_obj, msg){
 
 function ball_logic(crafty_obj, msg){
 		
-		ball.animate("ball_1", 10);
+		ball.animate("ball_1", 2);
+
 		if(msg.direction == "left") {
-			ball.x -= crafty_obj._speed;	
+			ball.x -= msg.speed * 2;	
 		}
 		else if(msg.direction == "right") {
-			ball.x += crafty_obj._speed;	
+			ball.x += msg.speed * 2;	
 		}		
 		else if(msg.direction == "up") {
-			ball.y -= crafty_obj._speed;	
+			ball.y -= msg.speed * 2;	
 		}
 		else if(msg.direction == "down") {
-			ball.y += crafty_obj._speed;	
+			ball.y += msg.speed * 2;	
 		}
 }
 
