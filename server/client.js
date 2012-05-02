@@ -1,7 +1,7 @@
 var webSocket;
 
 $(document).ready(function() {
-                webSocket = new io.connect('ws://10.16.124.107', { port: 2000 });
+                webSocket = new io.connect('ws://localhost', { port: 2000 });
 
                 webSocket.on('connect', function() {
                    logger("Connected to the server");
@@ -22,6 +22,7 @@ $(document).ready(function() {
 
                 webSocket.on('disconnect', function() {
                     logger('Disconnected from the server');
+                    alert("Other player has disconnected, Please Refresh to start a new game.");
                 });
 
 		/*
@@ -127,7 +128,8 @@ function register_move_events(){
 			}
 		});
 		
-	logger("registered for game move events");
+	logger("<b>Movement</b>: UP_ARROW, LEFT_ARROW, RIGHT_ARROW, DOWN_ARROW, <b>Sprint</b>: SHIFT,  <b>Shoot</b>: SPACE")
+    logger("registered for game move events");
 
 }
 

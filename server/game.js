@@ -32,7 +32,7 @@ var INIT_P2_POS_X = INIT_BALL_POS_X + 2*SPRITE_SIZE;
 
 var WALKSPEED = 2;
 var RUNSPEED = 3;
-var KICK = 75;
+var KICK = 35;
 
 var P1SCORE = 0;
 var P2SCORE = 0;
@@ -311,7 +311,7 @@ window.onload = function() {
 			}).onHit("wall_top", function() {
 				logger("out of bounds");
 				checkoutofbounds();
-			});	
+			});
 		
 		//create our player entity with some premade components
 		player1 = Crafty.e("2D, Canvas, player1, Controls, CustomControls1, Animate, Collision")
@@ -493,21 +493,21 @@ function set_player_2_controls(crafty_obj){
 		//move the player in a direction depending on the booleans
 		//only move the player in one direction at a time (up/down/left/right)
 
-		if(crafty_obj.isDown("D")){
+		if(crafty_obj.isDown("RIGHT_ARROW")){
 	
-			webSocket.emit('game_move',{player:"2", move:"RIGHT_ARROW", space:crafty_obj.isDown("K"), shift:crafty_obj.isDown("G"), canShoot:player2CanShoot});
+			webSocket.emit('game_move',{player:"2", move:"RIGHT_ARROW", space:crafty_obj.isDown("SPACE"), shift:crafty_obj.isDown("SHIFT"), canShoot:player2CanShoot});
 		}						
-		else if(crafty_obj.isDown("A")){ 
+		else if(crafty_obj.isDown("LEFT_ARROW")){
 
-			webSocket.emit('game_move',{player:"2", move:"LEFT_ARROW", space:crafty_obj.isDown("K"), shift:crafty_obj.isDown("G"), canShoot:player2CanShoot});
+			webSocket.emit('game_move',{player:"2", move:"LEFT_ARROW", space:crafty_obj.isDown("SPACE"), shift:crafty_obj.isDown("SHIFT"), canShoot:player2CanShoot});
 		}
-		else if(crafty_obj.isDown("W")){
+		else if(crafty_obj.isDown("UP_ARROW")){
 
-			webSocket.emit('game_move',{player:"2", move:"UP_ARROW", space:crafty_obj.isDown("K"), shift:crafty_obj.isDown("G"), canShoot:player2CanShoot});
-		}	
-		else if(crafty_obj.isDown("S")){
+			webSocket.emit('game_move',{player:"2", move:"UP_ARROW", space:crafty_obj.isDown("SPACE"), shift:crafty_obj.isDown("SHIFT"), canShoot:player2CanShoot});
+		}
+		else if(crafty_obj.isDown("DOWN_ARROW")){
 
-			webSocket.emit('game_move',{player:"2", move:"DOWN_ARROW", space:crafty_obj.isDown("K"), shift:crafty_obj.isDown("G"), canShoot:player2CanShoot});
+			webSocket.emit('game_move',{player:"2", move:"DOWN_ARROW", space:crafty_obj.isDown("SPACE"), shift:crafty_obj.isDown("SHIFT"), canShoot:player2CanShoot});
 		 }
 		 
 	});
