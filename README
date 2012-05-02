@@ -1,3 +1,5 @@
+Demo at http://rtf.kaheichan.com
+
 To setup things
 ===============
 
@@ -9,5 +11,6 @@ Then install:
 npm install node-static
 npm install socket.io
 
-
+To run, modify port in server/server.js as desired and in server/client.js
+run by executing node server/server.js
 
