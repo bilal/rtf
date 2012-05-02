@@ -116,7 +116,10 @@ function update_game_state(socket)
 			game_state = STARTED;
 			socket.emit('game_player','2'); // telling the player about player 1 or 2
 			send_message_to_all(socket, 'game_start', 'Start the game ....');
-		}
+		}else if (users.length < 1){
+                        game_state = FINISHED;
+                }
+
 	}else if (game_state == STARTED){
 
 
